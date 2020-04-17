@@ -1,18 +1,35 @@
-import express from 'express';
-import graphqlHTTP from 'express-graphql';
-import schema from './schema';
+import express from "express";
+import graphqlHTTP from "express-graphql";
+import schema from "./schema/schema";
+
+import { connect } from "./database";
 
 const app = express();
+connect();
 
-app.get('/', (req, res) => {
-    res.json({
-        message: 'Hello world'
-    });
+// settings
+app.set("PORT", 3000);
+
+// middlewares
+
+// routes
+app.get("/", (req, res) => {
+  res.json({
+    message: "Hello world",
+  });
 });
 
-app.use('/graphql', graphqlHTTP({
+app.use(
+  "/graphql",
+  graphqlHTTP({
     graphiql: true,
-    schema: schema
-}));
+    schema: schema,
+    context: {
+        message: 'Hola!'
+    }
+  })
+);
 
-app.listen(3000, () => console.log('Server listening on port 3000'));
+app.listen(app.get("PORT"), () =>
+  console.log(`Server listening on port ${app.get("PORT")}`)
+);
