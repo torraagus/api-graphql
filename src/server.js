@@ -1,11 +1,13 @@
 import express from "express";
 import graphqlHTTP from "express-graphql";
-import schema from "./schema/schema";
 
+import schema from "./schema/schema";
 import { connect } from "./database";
+import { users } from './data/users';
+
 
 const app = express();
-connect();
+//connect();
 
 // settings
 app.set("PORT", 3000);
@@ -25,7 +27,7 @@ app.use(
     graphiql: true,
     schema: schema,
     context: {
-        message: 'Hola!'
+        users: users
     }
   })
 );
