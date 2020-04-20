@@ -1,6 +1,8 @@
+import { userType } from './entities/user/type';
+
 export const queries = `
     type Query {
-        hello: String
-        greet(name: String): String
+        test: String
+        getUsers: [User]
     }
 `
