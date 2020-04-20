@@ -7,7 +7,7 @@ import { users } from './data/users';
 
 
 const app = express();
-//connect();
+connect();
 
 // settings
 app.set("PORT", 3000);
