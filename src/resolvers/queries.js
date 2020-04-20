@@ -1,8 +1,8 @@
 export const queries_r = {
-  hello: () => {
+  test: () => {
     return "Hello world with graphql";
   },
-  greet(root, { name }, { message }) {
-    return `Hello ${name} - Context: ${message}`;
+  getUsers(root, args , { users }) {
+    return users;
   },
 };
