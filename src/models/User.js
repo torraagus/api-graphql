@@ -1,20 +1,24 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     username: {
-        type: String,
-        unique: true
+      type: String,
+      unique: true,
+      minlength: [3, "Username too short (min. length is 3)"],
     },
     firstname: {
-        type: String,
-        required: true,
-        minlength: [3, 'Firstname too short (min. length is 3)']
+      type: String,
+      required: true,
+      minlength: [3, "Firstname too short (min. length is 3)"],
     },
     lastname: {
-        type: String,
-        maxlength: [10, 'Lastname too large (max. length is 10)']
+      type: String,
+      maxlength: [10, "Lastname too large (max. length is 10)"],
     },
-    age: Number
-});
+    age: Number,
+  },
+  { _id: process.env.current_db == 'firestore' ? false : true }
+);
 
-export default model('user', userSchema);
+export default model("user", userSchema);
