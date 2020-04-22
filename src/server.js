@@ -1,13 +1,12 @@
 import express from "express";
 import graphqlHTTP from "express-graphql";
 
+import { connect_firebase, connect_mongodb } from "./database";
 import schema from "./schema/schema";
-import { connect } from "./database";
-import { users } from './data/users';
-
 
 const app = express();
-connect();
+connect_mongodb();
+connect_firebase();
 
 // settings
 app.set("PORT", 3000);
@@ -15,20 +14,18 @@ app.set("PORT", 3000);
 // middlewares
 
 // routes
-app.get("/", (req, res) => {
-  res.json({
-    message: "Hello world",
-  });
-});
-
 app.use(
   "/graphql",
   graphqlHTTP({
     graphiql: true,
     schema: schema,
+    rootValue: {},
     context: {
-        users: users
-    }
+      db: process.env.current_db,
+      collections: {
+        users: process.env.current_db == 'memory' ? require('./data/users') : 'clientes'
+      }
+    },
   })
 );
 
