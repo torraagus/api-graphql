@@ -1,19 +1,38 @@
-import User from "../models/User";
-import { formatError } from "../errors";
-//import { users } from '../data/users';
+import { createUser, deleteUser, updateUser } from "../repositories/users";
 
 export const mutations_r = {
-  createTask(_, { input }) {
+  createTask(_root, { input }, ctx) {
     return input ? "Task created" : "Error";
   },
-  async createUser(_, { input }, { users }) {
-    const newUser = new User(input);
+  createUser(_root, { input }, { db, collections: { users } }, info) {
     try {
-      //await newUser.save(); // save to mongodb in atlas platform
-      users.push(newUser);v // save to users array in memory
-      return "User saved!";
-    } catch (e) {
-      return formatError(e.errors);
+      return createUser(input, users, db).then((userSaved) => {
+        if (!userSaved) throw new Error("Error: User not saved!");
+        return `Success: User saved in ${db}!`;
+      });
+    } catch (err) {
+      return err;
+    }
+  },
+  updateUser(_root, { _id, user }, { db, collections: { users } }, info) {
+    try {
+      return updateUser({ _id, user }, users, db).then((userSaved) => {
+        if (!userSaved) throw new Error("Error: User not updated!");
+        return `Success: User updated in ${db}!`;
+      });
+    } catch (err) {
+      return err;
+    }
+  },
+  deleteUser(_root, { _id }, { db, collections: { users } }, info) {
+    try {
+      return deleteUser(_id, users, db).then((userDeleted) => {
+        console.log(userDeleted);
+        if (!userDeleted) throw new Error("Error: User not deleted!");
+        return `Success: User deleted from ${db}!`;
+      });
+    } catch (err) {
+      return err;
     }
   },
 };
