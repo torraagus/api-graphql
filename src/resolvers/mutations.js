@@ -27,7 +27,6 @@ export const mutations_r = {
   deleteUser(_root, { _id }, { db, collections: { users } }, info) {
     try {
       return deleteUser(_id, users, db).then((userDeleted) => {
-        console.log(userDeleted);
         if (!userDeleted) throw new Error("Error: User not deleted!");
         return `Success: User deleted from ${db}!`;
       });
