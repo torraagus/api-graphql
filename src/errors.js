@@ -1,7 +1,9 @@
+const errorCode = {
+  E11000: "Duplicate key",
+};
+
 export function formatError(obj) {
-  let errors = 'Error: ';
-  for (const prop in obj) {
-    errors += `${obj[prop]}, `;    
-  }
-  return errors.substr(0, errors.length-2);;
+  const error = errorCode[`E${obj["code"]}`];
+  const field = Object.getOwnPropertyNames(obj["keyValue"]).sort()[0];
+  return `${error} in field ${field}`;
 }
