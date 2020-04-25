@@ -1,17 +1,24 @@
-import { firebase } from "../exports";
 import validate from "../validations/users";
 import User from "../models/User";
+import { formatError } from "../errors";
+import utils from "./utils/utils";
 
 async function createUser(input) {
   const newUser = new User(input);
 
   try {
     // validate input with mongoose model
-    const userErrors = validate(newUser);
-    if (userErrors) throw new Error(`${userErrors}`);
+    const errors = validate(newUser);
+    if (errors) throw new Error(`${errors}`);
     // save to mongodb in atlas platform
-    await newUser.save();
-    return true;
+    return await newUser
+      .save()
+      .then(() => {
+        return true;
+      })
+      .catch((err) => {
+        if (err) throw new Error(formatError(err));
+      });
   } catch (err) {
     throw err;
   }
@@ -27,12 +34,10 @@ async function updateUser(input) {
     // update user to mongodb in atlas platform
     return await User.findOneAndUpdate({ _id: input._id }, input.user)
       .then((val) => {
-        console.log(val);
         if (!val) return false;
         return true;
       })
       .catch((e) => {
-        console.log(e);
         return false;
       });
   } catch (err) {
@@ -58,15 +63,10 @@ async function deleteUser(id) {
 
 async function getUsers(order, skip, limit) {
   try {
+    // create options object
+    const opt = utils.createOptObj(order, skip, limit);
+
     // get documents from mongodb in atlas platform
-    const opt = {};
-    if (skip) opt["skip"] = skip;
-    if (limit) opt["limit"] = limit;
-    const sort = {};
-    if (order) {
-      sort[order.sortBy] = order.order;
-      opt["sort"] = sort;
-    }
     return await User.find({}, null, opt)
       .then((docs) => {
         if (!docs) return false;
