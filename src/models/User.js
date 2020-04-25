@@ -18,7 +18,21 @@ const userSchema = new Schema(
     },
     age: Number,
   },
-  { _id: process.env.current_db == 'firestore' ? false : true }
+  { _id: true, timestamps: true }
 );
+
+// Instance Methods are used by instance of a model, an instance of a model is called a document
+/*userSchema.methods.findByLastname = async function (lastname) {
+  return await this.model("user").find({ lastname: lastname });
+};
+
+// Statics function are used by model
+userSchema.statics.findByName = function (lastname) {
+  return this.find({ lastname: new RegExp(lastname, "i") }).then((val) => console.log(val));
+};
+
+userSchema.static("findByFirstname", function (firstname) {
+  return this.find({ firstname: firstname }).then((val) => {return val});
+});*/
 
 export default model("user", userSchema);
