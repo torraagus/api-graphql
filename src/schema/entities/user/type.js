@@ -4,6 +4,6 @@ export const userType = `
         username: String
         firstname: String
         lastname: String
-        age: Int!
+        age: Int
     }
 `
